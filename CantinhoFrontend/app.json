@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Cantinho Nacional",
+    "slug": "cantinho-nacional",
+    "version": "1.0.0",
+    "scheme": "cantinhonacional",
+    "ios": { "supportsTablet": true },
+    "android": { "adaptiveIcon": { "backgroundColor": "#121212" } }
+  }
+}
