@@ -50,7 +50,7 @@ export default function Home() {
   };
 
   const handleLogout = async () => {
-    Alert.alert("Sair", "Encerrar sessão?", [
+    Alert.alert("Sair", "deseja sair ?", [
       { text: "Não" },
       { text: "Sim", onPress: async () => {
           await AsyncStorage.removeItem('@user');

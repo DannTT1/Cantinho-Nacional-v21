@@ -1,0 +1,17 @@
+# --- NODE / REACT NATIVE (FRONTEND) ---
+**/node_modules/
+**/.expo/
+**/dist/
+*.log
+
+# --- INTELID/IDEA / VS CODE ---
+**/.idea/
+*.iml
+**/.vscode/
+**/.DS_Store
+
+# --- SPRING BOOT / JAVA (BACKEND) ---
+**/target/
+*.class
+*.jar
+*.war

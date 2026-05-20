@@ -4,7 +4,14 @@
     "slug": "cantinho-nacional",
     "version": "1.0.0",
     "scheme": "cantinhonacional",
-    "ios": { "supportsTablet": true },
-    "android": { "adaptiveIcon": { "backgroundColor": "#121212" } }
+    "ios": { 
+      "supportsTablet": true 
+    },
+    "android": { 
+      "adaptiveIcon": { 
+        "backgroundColor": "#121212" 
+      },
+      "softwareKeyboardLayoutMode": "pan"
+    }
   }
 }

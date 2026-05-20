@@ -1,10 +1,10 @@
 package cantinhonacional;
 
-import com.cantinhonacional.CantinhoNacionalApplication; // Verifique se o import está correto
+import com.cantinhonacional.CantinhoNationalApplication; // Verifique se o import está correto
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = CantinhoNacionalApplication.class)
+@SpringBootTest(classes = CantinhoNationalApplication.class)
 class CantinhoNationalApplicationTests {
 
 	@Test

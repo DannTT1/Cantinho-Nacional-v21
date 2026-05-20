@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, ActivityIndicator, StyleSheet, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import api from '../../configuration/api/api';
 import { Colors } from '../../configuration/styles/theme';
+import { useFocusEffect } from 'expo-router'; 
+
 
 export default function Estante() {
   const [alugueis, setAlugueis] = useState<any[]>([]);
@@ -29,7 +31,12 @@ export default function Estante() {
     }
   };
 
-  useEffect(() => { loadRentals(); }, []);
+ 
+useFocusEffect(
+  useCallback(() => {
+    loadRentals();
+  }, [])
+);
 
   const handleCancel = (bookId: string) => {
     Alert.alert("Devolver Livro", "Deseja confirmar a devolução?", [

@@ -5,7 +5,6 @@ import com.cantinhonacional.dto.UserDebtDTO;
 import com.cantinhonacional.entities.Book;
 import com.cantinhonacional.service.AdminService;
 import com.cantinhonacional.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -15,11 +14,13 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class AdminController {
 
-    @Autowired
-    private AdminService adminService;
+    private final AdminService adminService;
+    private final BookService bookService;
 
-    @Autowired // ESSENCIAL: Injeção correta do serviço
-    private BookService bookService;
+    public AdminController(AdminService adminService, BookService bookService) {
+        this.adminService = adminService;
+        this.bookService = bookService;
+    }
 
     @GetMapping("/dashboard")
     public ResponseEntity<DashboardDTO> getDashboard() {

@@ -1,16 +1,10 @@
 package com.cantinhonacional.enums;
 
 public enum UserRole {
-    ADMIN("admin"),
-    CLIENT("client");
+    ADMIN(),
+    CLIENT();
 
-    private String role;
-
-    UserRole(String role) {
-        this.role = role;
+    UserRole() {
     }
 
-    public String getRole() {
-        return role;
-    }
 }
