@@ -1,12 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView,  Alert,ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform 
-} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, Alert, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import api from '../../configuration/api/api';
 import { Colors } from '../../configuration/styles/theme';
+import HeaderGlobal from '../../configuration/header/HeaderGlobal'; // 👈 Seu caminho oficial considerado
 
 export default function NovoLivroAdmin() {
   const router = useRouter();
@@ -16,7 +14,8 @@ export default function NovoLivroAdmin() {
     author: '', 
     description: '', 
     quantity: '1', 
-    coverUrl: '' 
+    coverUrl: '',
+    country: 'Brasil' // Mantém o padrão nacional pré-preenchido
   });
 
   const salvarNovo = async () => {
@@ -25,23 +24,31 @@ export default function NovoLivroAdmin() {
       return;
     }
 
+    // FILTRO DE NACIONALIDADE ATIVADO:
+    const paisLimpo = form.country.trim().toLowerCase();
+    if (paisLimpo !== 'brasil' && paisLimpo !== 'brasileiro' && paisLimpo !== 'brasileira') {
+      Alert.alert(
+        "Obra Recusada", 
+        "Este aplicativo é exclusivo para o acervo de literatura e obras nacionais. Não é permitido cadastrar livros estrangeiros."
+      );
+      return;
+    }
+
     try {
       setLoading(true);
-      
       const payload = { 
         ...form, 
         quantity: parseInt(form.quantity) || 0 
       };
 
       await api.post('/admin/books', payload); 
-
       Alert.alert("Sucesso", "O livro foi adicionado ao acervo com sucesso!");
-      
       router.replace('/admin/dashbord'); 
       
     } catch (e: any) {
       console.error("Erro ao cadastrar:", e.response?.data);
-      Alert.alert("Erro no Cadastro", "Não foi possível salvar o livro. Verifique a conexão com o servidor.");
+      const erroServidor = e.response?.data?.message || "Não foi possível salvar o livro.";
+      Alert.alert("Erro no Cadastro", erroServidor);
     } finally {
       setLoading(false);
     }
@@ -50,15 +57,16 @@ export default function NovoLivroAdmin() {
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-      style={{ flex: 1 }}
+      style={{ flex: 1, backgroundColor: '#121212' }}
     >
+      <HeaderGlobal title="Novo Produto" showLogout={false} />
+
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
+        <View style={styles.actionHeader}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="close" size={28} color={Colors.primary} />
+            <Text style={styles.backText}>Cancelar</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Novo Produto</Text>
-          <View style={{ width: 28 }} /> 
         </View>
 
         <View style={styles.form}>
@@ -78,6 +86,16 @@ export default function NovoLivroAdmin() {
             placeholderTextColor="#666" 
             value={form.author}
             onChangeText={(v) => setForm({ ...form, author: v })} 
+          />
+
+          {/* 👈 ENTRADA VISUAL DO PAÍS ADICIONADA AQUI: */}
+          <Text style={styles.label}>PAÍS DE ORIGEM</Text>
+          <TextInput 
+            style={styles.input} 
+            placeholder="Ex: Brasil" 
+            placeholderTextColor="#666" 
+            value={form.country}
+            onChangeText={(v) => setForm({ ...form, country: v })} 
           />
 
           <Text style={styles.label}>DESCRIÇÃO / SINOPSE</Text>
@@ -132,39 +150,12 @@ export default function NovoLivroAdmin() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212' },
-  header: { 
-    padding: 25, 
-    paddingTop: 60, 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    backgroundColor: '#1A1A1A',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333'
-  },
-  headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  actionHeader: { paddingHorizontal: 20, paddingTop: 15 },
+  backButton: { flexDirection: 'row', alignItems: 'center' },
+  backText: { color: '#fff', marginLeft: 8, fontWeight: '500', fontSize: 16 },
   form: { padding: 20 },
   label: { color: Colors.primary, marginBottom: 8, fontWeight: 'bold', fontSize: 11, letterSpacing: 1 },
-  input: { 
-    backgroundColor: '#1A1A1A', 
-    color: '#fff', 
-    padding: 15, 
-    borderRadius: 8, 
-    marginBottom: 20, 
-    borderWidth: 1, 
-    borderColor: '#333' 
-  },
-  btnSalvar: { 
-    backgroundColor: Colors.primary, 
-    padding: 18, 
-    borderRadius: 12, 
-    alignItems: 'center', 
-    marginTop: 10,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5
-  },
+  input: { backgroundColor: '#1A1A1A', color: '#fff', padding: 15, borderRadius: 8, marginBottom: 20, borderWidth: 1, borderColor: '#333' },
+  btnSalvar: { backgroundColor: Colors.primary, padding: 18, borderRadius: 12, alignItems: 'center', marginTop: 10, shadowColor: Colors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 5, elevation: 5 },
   btnText: { fontWeight: 'bold', color: '#1a1a1a', fontSize: 16 }
 });

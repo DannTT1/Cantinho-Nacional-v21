@@ -124,8 +124,22 @@ export default function Detalhes() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212' },
   backButton: { position: 'absolute', top: 50, left: 20, zIndex: 10, backgroundColor: 'rgba(0,0,0,0.6)', borderRadius: 20, padding: 8 },
-  imageContainer: { alignItems: 'center', paddingTop: 80, backgroundColor: '#1a1a1a', paddingBottom: 40 },
-  coverImage: { width: 220, height: 330, borderRadius: 15 },
+  imageContainer: { 
+  alignItems: 'center', 
+  paddingTop: 90, 
+  backgroundColor: '#1A1A1A', 
+  paddingBottom: 40,
+},
+coverImage: { 
+  width: 220, 
+  height: 330, 
+  borderRadius: 15,
+  resizeMode: 'cover',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 10 },
+  shadowOpacity: 0.5,
+  shadowRadius: 10,
+},
   infoContainer: { padding: 25, borderTopLeftRadius: 30, borderTopRightRadius: 30, backgroundColor: '#121212', marginTop: -30, minHeight: 450 },
   title: { fontSize: 26, fontWeight: 'bold', color: '#fff' },
   author: { fontSize: 18, color: Colors.primary, marginBottom: 20 }, // CORRIGIDO AQUI

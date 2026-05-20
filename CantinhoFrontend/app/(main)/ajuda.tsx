@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Linking, Alert, StyleSheet, S
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '../../configuration/styles/theme';
+import HeaderGlobal from '../../configuration/header/HeaderGlobal'; // 👈 Caminho oficial considerado
 
 export default function AjudaScreen() {
   const [, setUserStatus] = useState('ACTIVE');
@@ -29,11 +30,10 @@ export default function AjudaScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#1A1A1A" />
+      <StatusBar barStyle="light-content" />
       
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Central de Ajuda</Text>
-      </View>
+      {/* HeaderGlobal configurado para esconder o botão de Sair nesta tela */}
+      <HeaderGlobal title="Central de Ajuda" showLogout={false} />
 
       <ScrollView 
         showsVerticalScrollIndicator={false}
@@ -73,25 +73,51 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: '#121212',
   },
-  header: { 
-    paddingTop: 50, 
-    paddingBottom: 20, 
-    backgroundColor: '#1A1A1A', 
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333'
-  },
-  headerTitle: { color: Colors.primary, fontSize: 20, fontWeight: 'bold' },
   scrollContent: { 
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 100 
   },
-  content: { flex: 1 },
-  sectionTitle: { color: Colors.primary, fontSize: 18, fontWeight: 'bold', marginBottom: 15, marginTop: 10 },
-  faqCard: { backgroundColor: '#1A1A1A', padding: 18, borderRadius: 12, marginBottom: 15, borderWidth: 1, borderColor: '#333' },
-  faqQuestion: { color: '#fff', fontWeight: 'bold', marginBottom: 5 },
-  faqAnswer: { color: '#aaa', fontSize: 14 },
-  contactItem: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1A1A1A', padding: 18, borderRadius: 12, marginTop: 12, borderWidth: 1, borderColor: '#333' },
-  contactText: { color: '#fff', marginLeft: 15, fontWeight: '500' }
+  content: { 
+    flex: 1 
+  },
+  sectionTitle: { 
+    color: Colors.primary, 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    marginBottom: 15, 
+    marginTop: 10 
+  },
+  faqCard: { 
+    backgroundColor: '#1A1A1A', 
+    padding: 18, 
+    borderRadius: 12, 
+    marginBottom: 15, 
+    borderWidth: 1, 
+    borderColor: '#333' 
+  },
+  faqQuestion: { 
+    color: '#fff', 
+    fontWeight: 'bold', 
+    marginBottom: 5 
+  },
+  faqAnswer: { 
+    color: '#aaa', 
+    fontSize: 14 
+  },
+  contactItem: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    backgroundColor: '#1A1A1A', 
+    padding: 18, 
+    borderRadius: 12, 
+    marginTop: 12, 
+    borderWidth: 1, 
+    borderColor: '#333' 
+  },
+  contactText: { 
+    color: '#fff', 
+    marginLeft: 15, 
+    fontWeight: '500' 
+  }
 });

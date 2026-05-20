@@ -1,11 +1,11 @@
-import React, { useEffect, useState,useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, ActivityIndicator, StyleSheet, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import api from '../../configuration/api/api';
 import { Colors } from '../../configuration/styles/theme';
 import { useFocusEffect } from 'expo-router'; 
-
+import HeaderGlobal from '../../configuration/header/HeaderGlobal'; // 👈 Caminho oficial considerado
 
 export default function Estante() {
   const [alugueis, setAlugueis] = useState<any[]>([]);
@@ -31,12 +31,11 @@ export default function Estante() {
     }
   };
 
- 
-useFocusEffect(
-  useCallback(() => {
-    loadRentals();
-  }, [])
-);
+  useFocusEffect(
+    useCallback(() => {
+      loadRentals();
+    }, [])
+  );
 
   const handleCancel = (bookId: string) => {
     Alert.alert("Devolver Livro", "Deseja confirmar a devolução?", [
@@ -76,37 +75,55 @@ useFocusEffect(
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>Minha Estante</Text>
       
-      <FlatList
-        data={alugueis}
-        contentContainerStyle={{ paddingBottom: 120 }} 
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>Nenhum livro alugado no momento.</Text>
-        }
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.bookTitle}>{item.bookTitle}</Text>
-              <Text style={styles.info}>📍 Unidade: Santo Amaro, 722</Text>
-              <Text style={[styles.info, { color: Colors.primary }]}>
-                📅 Devolução: {new Date(item.returnDate).toLocaleDateString('pt-BR')}
-              </Text>
+      {/* HeaderGlobal unificado de ponta a ponta no topo da tela */}
+      <HeaderGlobal title="Minha Estante" showLogout={true} />
+      
+      {/* Conteúdo encapsulado para respeitar os paddings laterais */}
+      <View style={styles.content}>
+        <FlatList
+          data={alugueis}
+          contentContainerStyle={{ paddingBottom: 120 }} 
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>Nenhum livro alugado no momento.</Text>
+          }
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.bookTitle}>{item.bookTitle}</Text>
+                <Text style={styles.info}>📍 Unidade: Santo Amaro, 722</Text>
+                <Text style={[styles.info, { color: Colors.primary }]}>
+                  📅 Devolução: {new Date(item.returnDate).toLocaleDateString('pt-BR')}
+                </Text>
+              </View>
+              <TouchableOpacity onPress={() => handleCancel(item.bookId)}>
+                <Ionicons name="trash-outline" size={26} color={Colors.error} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => handleCancel(item.bookId)}>
-              <Ionicons name="trash-outline" size={26} color={Colors.error} />
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+          )}
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212', paddingHorizontal: 20, paddingTop: 60 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212' },
-  title: { fontSize: 26, fontWeight: 'bold', color: Colors.primary, marginBottom: 20 },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#121212' 
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20
+  },
+  center: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: '#121212' 
+  },
   card: { 
     backgroundColor: '#1A1A1A', 
     padding: 20, 
@@ -117,7 +134,19 @@ const styles = StyleSheet.create({
     borderWidth: 1, 
     borderColor: '#333' 
   },
-  bookTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  info: { color: '#aaa', fontSize: 12, marginTop: 5 },
-  emptyText: { color: '#666', textAlign: 'center', marginTop: 50 }
+  bookTitle: { 
+    color: '#fff', 
+    fontSize: 18, 
+    fontWeight: 'bold' 
+  },
+  info: { 
+    color: '#aaa', 
+    fontSize: 12, 
+    marginTop: 5 
+  },
+  emptyText: { 
+    color: '#666', 
+    textAlign: 'center', 
+    marginTop: 50 
+  }
 });

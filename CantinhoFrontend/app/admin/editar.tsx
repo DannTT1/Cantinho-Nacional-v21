@@ -1,12 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, Alert, ActivityIndicator,
-KeyboardAvoidingView,
-  Platform
-} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, Alert, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import api from '../../configuration/api/api';
 import { Colors } from '../../configuration/styles/theme';
+import HeaderGlobal from '../../configuration/header/HeaderGlobal'; // 👈 Seu caminho oficial considerado
 
 export default function EditarLivroAdmin() {
   const router = useRouter();
@@ -17,7 +15,8 @@ export default function EditarLivroAdmin() {
     author: '', 
     description: '', 
     quantity: '0', 
-    coverUrl: '' 
+    coverUrl: '',
+    country: 'Brasil' // Inicia o estado mapeado
   });
 
   const getCleanId = () => {
@@ -37,7 +36,8 @@ export default function EditarLivroAdmin() {
             author: res.data.author || '',
             description: res.data.description || '',
             quantity: String(res.data.quantity || 0),
-            coverUrl: res.data.coverUrl || ''
+            coverUrl: res.data.coverUrl || '',
+            country: res.data.country || 'Brasil' // Sincroniza o país retornado pela API
           });
         })
         .catch(err => {
@@ -70,6 +70,16 @@ export default function EditarLivroAdmin() {
       return;
     }
 
+    // FILTRO DE VALIDAÇÃO DE NACIONALIDADE:
+    const paisLimpo = form.country.trim().toLowerCase();
+    if (paisLimpo !== 'brasil' && paisLimpo !== 'brasileiro' && paisLimpo !== 'brasileira') {
+      Alert.alert(
+        "Obra Recusada", 
+        "Este aplicativo aceita apenas obras nacionais. Não é permitido alterar a nacionalidade do livro para um país estrangeiro."
+      );
+      return;
+    }
+
     try {
       setLoading(true);
       const payload = { 
@@ -80,11 +90,12 @@ export default function EditarLivroAdmin() {
       };
 
       await api.put(`/admin/books/${cleanId}`, payload);
-      Alert.alert("Sucesso", "Dados atualizados com sucesso!");
+      Alert.alert("Sucesso", "Dados updated com sucesso!");
       router.replace('/admin/dashbord');
     } catch (e: any) {
       console.log("Erro no PUT:", e.response?.data || e.message);
-      Alert.alert("Erro", "Não foi possível salvar as alterações.");
+      const erroServidor = e.response?.data?.message || "Não foi possível salvar as alterações.";
+      Alert.alert("Erro", erroServidor);
     } finally {
       setLoading(false);
     }
@@ -93,15 +104,17 @@ export default function EditarLivroAdmin() {
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-      style={{ flex: 1 }}
+      style={{ flex: 1, backgroundColor: '#121212' }}
     >
+      <HeaderGlobal title="Editar Obra" showLogout={false} />
+
       <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
+        <View style={styles.actionHeader}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color={Colors.primary} />
+            <Text style={styles.backText}>Voltar</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Editar Obra</Text>
-          <TouchableOpacity onPress={excluirLivro}>
+          <TouchableOpacity onPress={excluirLivro} style={styles.trashIcon}>
             <Ionicons name="trash-outline" size={24} color={Colors.error} />
           </TouchableOpacity>
         </View>
@@ -122,6 +135,14 @@ export default function EditarLivroAdmin() {
               style={styles.input} 
               value={form.author} 
               onChangeText={(v) => setForm({ ...form, author: v })} 
+            />
+
+            {/* 👈 CAMPO DE TEXTO DO PAÍS DE ORIGEM NA EDIÇÃO: */}
+            <Text style={styles.label}>PAÍS DE ORIGEM</Text>
+            <TextInput 
+              style={styles.input} 
+              value={form.country} 
+              onChangeText={(v) => setForm({ ...form, country: v })} 
             />
 
             <Text style={styles.label}>DESCRIÇÃO DA OBRA</Text>
@@ -170,33 +191,13 @@ export default function EditarLivroAdmin() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212' },
-  header: { 
-    padding: 25, 
-    paddingTop: 60, 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    backgroundColor: '#1A1A1A' 
-  },
-  headerTitle: { color: Colors.primary, fontSize: 18, fontWeight: 'bold' },
+  actionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: 15 },
+  backButton: { flexDirection: 'row', alignItems: 'center' },
+  backText: { color: '#fff', marginLeft: 8, fontWeight: '500', fontSize: 16 },
+  trashIcon: { padding: 4 },
   form: { padding: 20 },
   label: { color: Colors.primary, marginBottom: 8, fontWeight: 'bold', fontSize: 12, letterSpacing: 0.5 },
-  input: { 
-    backgroundColor: '#1A1A1A', 
-    color: '#fff', 
-    padding: 15, 
-    borderRadius: 8, 
-    marginBottom: 20, 
-    borderWidth: 1, 
-    borderColor: '#333' 
-  },
-  btnSalvar: { 
-    backgroundColor: Colors.primary, 
-    padding: 18, 
-    borderRadius: 12, 
-    alignItems: 'center', 
-    marginTop: 10,
-    elevation: 3
-  },
+  input: { backgroundColor: '#1A1A1A', color: '#fff', padding: 15, borderRadius: 8, marginBottom: 20, borderWidth: 1, borderColor: '#333' },
+  btnSalvar: { backgroundColor: Colors.primary, padding: 18, borderRadius: 12, alignItems: 'center', marginTop: 10, elevation: 3 },
   btnText: { fontWeight: 'bold', color: '#1a1a1a', fontSize: 16 }
 });

@@ -8,17 +8,29 @@ export default function Index() {
   const router = useRouter();
 
   useEffect(() => {
-    const inicializarApp = async () => {
+    const verificarSessao = async () => {
       try {
-     
-        await AsyncStorage.removeItem('@user');
-        // LOGICA PARA REMOÇÃO DE USUARIO LOGADO
-router.replace('/(auth)/login');      } catch (e) {
-        console.error("Erro ao resetar app:", e);
-router.replace('/(auth)/login');      }
+        const userData = await AsyncStorage.getItem('@user');
+        
+        if (userData) {
+          const user = JSON.parse(userData);
+          // Verifica se o perfil do cara salvo na memória é administrador ou comum
+          if (user.role === 'ROLE_ADMIN') {
+            router.replace('/admin/dashbord');
+          } else {
+            router.replace('/(main)/index-home');
+          }
+        } else {
+          // Se não tiver dado salvo, manda fazer login
+          router.replace('/(auth)/login');
+        }
+      } catch (e) {
+        console.error("Erro ao inicializar app:", e);
+        router.replace('/(auth)/login');
+      }
     };
 
-    inicializarApp();
+    verificarSessao();
   }, []);
 
   return (
