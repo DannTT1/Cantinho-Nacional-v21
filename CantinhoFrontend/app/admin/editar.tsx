@@ -137,7 +137,6 @@ export default function EditarLivroAdmin() {
               onChangeText={(v) => setForm({ ...form, author: v })} 
             />
 
-            {/* 👈 CAMPO DE TEXTO DO PAÍS DE ORIGEM NA EDIÇÃO: */}
             <Text style={styles.label}>PAÍS DE ORIGEM</Text>
             <TextInput 
               style={styles.input} 

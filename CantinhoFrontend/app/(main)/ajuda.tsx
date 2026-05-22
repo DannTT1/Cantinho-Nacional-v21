@@ -57,7 +57,7 @@ export default function AjudaScreen() {
 
           <TouchableOpacity 
             style={styles.contactItem} 
-            onPress={() => Linking.openURL('mailto:suporte@cantinhonacional.com')}
+            onPress={() => Linking.openURL('mailto:matheus.cardoso97@outlook.com')}
           >
             <Ionicons name="mail-outline" size={24} color={Colors.primary} />
             <Text style={styles.contactText}>E-mail de Suporte</Text>

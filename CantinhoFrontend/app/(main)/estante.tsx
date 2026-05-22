@@ -76,7 +76,6 @@ export default function Estante() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       
-      {/* HeaderGlobal unificado de ponta a ponta no topo da tela */}
       <HeaderGlobal title="Minha Estante" showLogout={true} />
       
       {/* Conteúdo encapsulado para respeitar os paddings laterais */}

@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import api from '../../configuration/api/api';
 import { Colors } from '../../configuration/styles/theme';
 import { imagensLocais } from '../../configuration/image/image';
-import HeaderGlobal from '../../configuration/header/HeaderGlobal'; // 👈 Seu caminho oficial
+import HeaderGlobal from '../../configuration/header/HeaderGlobal'; 
 
 export default function Explorar() {
   const [livros, setLivros] = useState<any[]>([]);

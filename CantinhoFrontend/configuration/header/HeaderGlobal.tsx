@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1A1A1A',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between', // Joga o título para a esquerda e o botão para a direita
+    justifyContent: 'space-between', 
     borderBottomWidth: 1,
     borderBottomColor: '#333',
   },

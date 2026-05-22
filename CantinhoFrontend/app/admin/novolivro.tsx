@@ -15,7 +15,7 @@ export default function NovoLivroAdmin() {
     description: '', 
     quantity: '1', 
     coverUrl: '',
-    country: 'Brasil' // Mantém o padrão nacional pré-preenchido
+    country: 'Brasil' 
   });
 
   const salvarNovo = async () => {
@@ -88,7 +88,6 @@ export default function NovoLivroAdmin() {
             onChangeText={(v) => setForm({ ...form, author: v })} 
           />
 
-          {/* 👈 ENTRADA VISUAL DO PAÍS ADICIONADA AQUI: */}
           <Text style={styles.label}>PAÍS DE ORIGEM</Text>
           <TextInput 
             style={styles.input} 
